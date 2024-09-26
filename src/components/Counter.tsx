@@ -1,21 +1,29 @@
 import { Button } from "@fluentui/react-components";
-import type { ButtonProps } from "@fluentui/react-components";
+import { useMachine } from "@xstate/react";
+import { counterMachine } from "../machines/counterMachine";
 
 const Counter = () => { 
+    const [state, send] = useMachine(counterMachine);
     const handleIncrement = () => {
-        alert('increment');
+        send({ type: 'increment' });
     }
     const handleDecrement = () => {
-        alert('decrement');
+        send({ type: 'decrement' });
+    }
+    const resetCounter = () => {
+        send({type: 'reset'});
     }
     return(
         <>
             <div className="card w-25">
                 <div className="card-body">
-                    This is some text within a card body.
+                    <b>{state.context.count}</b>
                     <div>
                         <Button className="m-1" style={{color: 'green'}} onClick={handleIncrement}>Increment</Button>   
                         <Button className="m-1" style={{color: 'red'}} onClick={handleDecrement}>Decrement</Button>
+                    </div>
+                    <div>
+                        <Button className="m-1" style={{color: 'red'}} onClick={resetCounter}>Reset Counter</Button>
                     </div>
                 </div>
             </div>
