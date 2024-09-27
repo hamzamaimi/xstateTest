@@ -1,4 +1,4 @@
-import { assign, createMachine, setup } from "xstate";
+import { assertEvent, assign, createMachine, setup } from "xstate";
 
 export const counterMachine = setup({
     types: {
@@ -7,7 +7,7 @@ export const counterMachine = setup({
         | { type: 'increment' }
         | { type: 'decrement' }
         | { type: 'reset' }
-        | { type: 'undo' }
+        | { type: 'undo', currentCount: number }
     },
     actions: {
         increment: assign({
@@ -20,10 +20,13 @@ export const counterMachine = setup({
         }),
         reset: assign({
             previousCount: ({ context }) => context.count,
-            count: ({ context }) => context.count = 0
+            count: () =>  0
         }),
         undoLastOperation: assign({
-            count: ({ context }) => context.count = context.previousCount
+            count: ({ context, event }) => {
+                assertEvent(event, 'undo');
+                return context.count = event.currentCount;
+            }
         })
     }
 }).createMachine({

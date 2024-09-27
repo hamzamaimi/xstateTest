@@ -17,13 +17,11 @@ const Counter = () => {
         send({type: 'reset'});
         notify();
     }
-    const undoLastOperation = () => {
-        send({type: 'undo'});
+    const undoLastOperation = (count: number) => {
+        send({type: 'undo', currentCount: count});
     }
 
-    useEffect(() => {
-
-    }, [state.context])
+    useEffect(() => {}, [state.context.count])
 
 
     const toasterId = useId("toaster");
@@ -31,7 +29,7 @@ const Counter = () => {
     const notify = () =>
       dispatchToast(
         <Toast>
-          <ToastTitle action={<Link onClick={undoLastOperation}>Undo</Link>}>Email sent</ToastTitle>
+          <ToastTitle action={<Link onClick={() => undoLastOperation(state.context.count)}>Undo</Link>}>Email sent</ToastTitle>
           <ToastBody subtitle="Subtitle">Counter value has been correctly changed!</ToastBody>
         </Toast>,
         { intent: "success" }
