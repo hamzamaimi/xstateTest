@@ -21,8 +21,6 @@ const Counter = () => {
         send({type: 'undo', currentCount: count});
     }
 
-    useEffect(() => {}, [state.context.count])
-
 
     const toasterId = useId("toaster");
     const { dispatchToast } = useToastController(toasterId);
