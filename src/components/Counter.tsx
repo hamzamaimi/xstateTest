@@ -1,6 +1,7 @@
 import { Button, Link, Toast, ToastBody, Toaster, ToastTitle, useId, useToastController } from "@fluentui/react-components";
 import { useMachine } from "@xstate/react";
 import { counterMachine } from "../machines/counterMachine";
+import { useEffect, useState } from "react";
 
 const Counter = () => { 
     const [state, send] = useMachine(counterMachine);
@@ -16,13 +17,21 @@ const Counter = () => {
         send({type: 'reset'});
         notify();
     }
+    const undoLastOperation = () => {
+        send({type: 'undo'});
+    }
+
+    useEffect(() => {
+
+    }, [state.context])
+
 
     const toasterId = useId("toaster");
     const { dispatchToast } = useToastController(toasterId);
     const notify = () =>
       dispatchToast(
         <Toast>
-          <ToastTitle action={<Link>Undo</Link>}>Email sent</ToastTitle>
+          <ToastTitle action={<Link onClick={undoLastOperation}>Undo</Link>}>Email sent</ToastTitle>
           <ToastBody subtitle="Subtitle">Counter value has been correctly changed!</ToastBody>
         </Toast>,
         { intent: "success" }
